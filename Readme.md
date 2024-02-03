@@ -13,7 +13,7 @@ Create & Activate a Virtual Environment
 
 ```commandline
 sudo pip install virtualenv
-virtualenv ~/Projects/venv/petstore-env -p python3.9
+virtualenv ~/Projects/venv/petstore-env -p python3.10
 source ~/Projects/venv/petstore-env/bin/activate
 ```
 

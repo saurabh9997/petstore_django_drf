@@ -4,7 +4,7 @@ from services.apps.pets.models import Pet
 
 
 class Order(models.Model):
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    petId = models.PositiveIntegerField(null=False, default=1)
     quantity = models.IntegerField()
     shipDate = models.DateTimeField(auto_now_add=True)
     STATUS_CHOICES = [('placed', 'Placed'), ('approved', 'Approved'), ('delivered', 'Delivered'), ]

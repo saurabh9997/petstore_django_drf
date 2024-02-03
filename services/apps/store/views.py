@@ -1,8 +1,8 @@
-from collections import Counter
-
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from collections import Counter
 
 from services.apps.store.models import Order
 from services.apps.store.serializers import StoreSerializer
@@ -17,35 +17,11 @@ class StandardResultsSetPagination(PageNumberPagination):
 class StoreListView(APIView):
     pagination_class = StandardResultsSetPagination
 
-    # @swagger_auto_schema(
-    #     responses={200: PetSerializer(many=True)},
-    #     manual_parameters=[
-    #         {
-    #             "name": "page",
-    #             "required": False,
-    #             "in": "query",
-    #             "description": "Page number for paginated results.",
-    #             "type": "integer",
-    #         },
-    #     ],
-    # )
-    # def get(self, request):
-    #     """
-    #     List all store orders.
-    #     """
-    #     orders = Order.objects.all()
-    #
-    #     # Pagination logic
-    #     page_size = self.pagination_class.page_size
-    #     page = int(request.GET.get('page', 1))
-    #     start_index = (page - 1) * page_size
-    #     end_index = start_index + page_size
-    #     paginated_queryset = orders[start_index:end_index]
-    #
-    #     serializer = StoreSerializer(paginated_queryset, many=True)
-    #     return Response(serializer.data)
-
-    # @swagger_auto_schema(request_body=StoreSerializer, responses={201: StoreSerializer()}, )
+    @swagger_auto_schema(request_body=StoreSerializer, responses={201: StoreSerializer()}, examples={
+        "request": {"pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+                    "complete": False},
+        "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+                     "complete": False}, }, )
     def post(self, request):
         """
         Create a new store order.
@@ -58,9 +34,9 @@ class StoreListView(APIView):
 
 
 class StoreDetailView(APIView):
-    # @swagger_auto_schema(responses={200: StoreSerializer()}, examples={
-    #     "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
-    #                  "complete": False, }, }, )
+    @swagger_auto_schema(responses={200: StoreSerializer(), 204: "No Content"}, examples={
+        "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+                     "complete": False}}, )
     def get(self, request, orderId):
         """
         Retrieve a specific store order.
@@ -69,24 +45,24 @@ class StoreDetailView(APIView):
         serializer = StoreSerializer(pet)
         return Response(serializer.data)
 
-    # @swagger_auto_schema(request_body=StoreSerializer, responses={200: StoreSerializer()}, examples={
-    #     "request": {"pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
-    #                 "complete": False, },
-    #     "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
-    #                  "complete": False, }, }, )
-    # def put(self, request, orderId):
-    #     """
-    #     Update a specific store order.
-    #     """
-    #     pet = self.get_object(orderId)
-    #     serializer = StoreSerializer(pet, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     else:
-    #         return Response(serializer.errors, status=400)
+    @swagger_auto_schema(request_body=StoreSerializer, responses={200: StoreSerializer()}, examples={
+        "request": {"pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+                    "complete": False},
+        "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+                     "complete": False}, }, )
+    def put(self, request, orderId):
+        """
+        Update a specific store order.
+        """
+        pet = self.get_object(orderId)
+        serializer = StoreSerializer(pet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=400)
 
-    # @swagger_auto_schema(responses={204: "No Content"}, )
+    @swagger_auto_schema(responses={204: "No Content"}, examples={"response": None}, )
     def delete(self, request, orderId):
         """
         Delete a specific store order.

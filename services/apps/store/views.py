@@ -19,9 +19,9 @@ class StoreListView(APIView):
     pagination_class = StandardResultsSetPagination
 
     @swagger_auto_schema(request_body=StoreSerializer, responses={201: StoreSerializer()}, examples={
-        "request": {"pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+        "request": {"petId": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
                     "complete": False},
-        "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+        "response": {"id": 1, "petId": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
                      "complete": False}, }, )
     def post(self, request):
         """
@@ -36,7 +36,7 @@ class StoreListView(APIView):
 
 class StoreDetailView(APIView):
     @swagger_auto_schema(responses={200: StoreSerializer(), 204: "No Content"}, examples={
-        "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+        "response": {"id": 1, "petId": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
                      "complete": False}}, )
     def get_object(self, orderId):
         try:
@@ -47,21 +47,21 @@ class StoreDetailView(APIView):
         """
         Retrieve a specific store order.
         """
-        pet = self.get_object(orderId)
-        serializer = StoreSerializer(pet)
+        order = self.get_object(orderId)
+        serializer = StoreSerializer(order)
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=StoreSerializer, responses={200: StoreSerializer()}, examples={
-        "request": {"pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+        "request": {"petId": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
                     "complete": False},
-        "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
+        "response": {"id": 1, "petId": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
                      "complete": False}, }, )
     def put(self, request, orderId):
         """
         Update a specific store order.
         """
-        pet = self.get_object(orderId)
-        serializer = StoreSerializer(pet, data=request.data)
+        order = self.get_object(orderId)
+        serializer = StoreSerializer(order, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -73,8 +73,8 @@ class StoreDetailView(APIView):
         """
         Delete a specific store order.
         """
-        pet = self.get_object(orderId)
-        pet.delete()
+        order = self.get_object(orderId)
+        order.delete()
         return Response(status=204)
 
 

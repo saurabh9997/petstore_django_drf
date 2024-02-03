@@ -3,7 +3,7 @@ from .models import Order
 
 
 class StoreSerializer(serializers.ModelSerializer):
-    petId = serializers.IntegerField('petId')
+    # petId = serializers.IntegerField(source='pet.id')
 
     class Meta:
         model = Order

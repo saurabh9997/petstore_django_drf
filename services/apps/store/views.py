@@ -3,6 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from collections import Counter
+from django.http import Http404
 
 from services.apps.store.models import Order
 from services.apps.store.serializers import StoreSerializer
@@ -37,6 +38,11 @@ class StoreDetailView(APIView):
     @swagger_auto_schema(responses={200: StoreSerializer(), 204: "No Content"}, examples={
         "response": {"id": 1, "pet": 1, "quantity": 10, "shipDate": "2024-02-01T12:00:00Z", "status": "placed",
                      "complete": False}}, )
+    def get_object(self, orderId):
+        try:
+            return Order.objects.get(pk=orderId)
+        except Order.DoesNotExist:
+            raise Http404
     def get(self, request, orderId):
         """
         Retrieve a specific store order.
